@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  client:
+    build: client
+    container_name: con-client
+    restart: always
+    networks:
+      - exam-net
+    ports:
+      - 8080:5000
+    depends_on:
+      - generator
+  generator:
+    build: generator
+    container_name: con-generator
+    restart: always
+    networks:
+      - exam-net
+    depends_on:
+      - storage
+  storage:
+    build: storage
+    container_name: con-storage
+    networks:
+      - exam-net
+    environment:
+      - MYSQL_ROOT_PASSWORD=ExamPa$$w0rd
+    restart: always
+
+networks:
+  exam-net:
+    name: exam-net
