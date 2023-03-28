@@ -6,28 +6,32 @@ services:
     container_name: con-client
     restart: always
     networks:
-      - exam-net
+      - app-net
     ports:
       - 8080:5000
+    environment:
+      - DB_PASS=ExamPa$$w0rd
     depends_on:
-      - producer
+      - generator
   generator:
     image: mark79/generator
     container_name: con-generator
     restart: always
     networks:
-      - exam-net
+      - app-net
+    environment:
+      - DB_PASS=ExamPa$$w0rd
     depends_on:
       - storage
   storage:
     image: mark79/storage
     container_name: con-storage
     networks:
-      - exam-net
+      - app-net
     environment:
       - MYSQL_ROOT_PASSWORD=ExamPa$$w0rd
     restart: always
 
 networks:
-  exam-net:
+  app-net:
     name: exam-net
