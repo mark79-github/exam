@@ -61,12 +61,18 @@
         - Using docker compose with the following configuration [**`docker-compose.yml`**](/shared-files/prometheus/docker-compose.yml) run the Prometheus & Grafana containers
 3. **The result:**
     - Gitea repo can be seen at: [**`http://192.168.99.202:3000/vagrant/exam`**](http://192.168.99.202:3000/vagrant/exam)
+        - Credentials
+            - user: **`admin`**
+            - password: **`admin`**
     - Jenkins job pipeline can be seen at: [**`http://192.168.99.201:8080/job/exam/`**](http://192.168.99.201:8080/job/exam/)
         - Credentials
             - user: **`admin`**
             - password: **`admin`**
     - The final result of builded images in docker can be seen at: [**`http://localhost:80/`**](http://localhost:80/) or [**`http://192.168.99.202:8080/`**](http://192.168.99.202:8080/)
     - The Grafana monitoring dashboard can be seen at: [**`http://localhost:8083`**](http://localhost:8083) or [**`http://192.168.99.203:3000/`**](http://192.168.99.203:3000/)
+        - Credentials
+            - user: **`admin`**
+            - password: **`admin`**
     - Created docker hub repositories can be seen at: [**`https://hub.docker.com/repositories/mark79`**](https://hub.docker.com/repositories/mark79)
     - Docker metrics exposed to Prometheus can be seen at: [**`http://192.168.99.202:9323/metrics`**](http://192.168.99.202:9323/metrics)
     - Node exporter metrics exposed to Prometheus can be seen at: [**`http://192.168.99.201:9100/metrics`**](http://192.168.99.201:9100/metrics) and [**`http://192.168.99.202:9100/metrics`**](http://192.168.99.202:9100/metrics)
