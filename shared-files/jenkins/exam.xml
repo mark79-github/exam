@@ -28,7 +28,7 @@
       </triggers>
     </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
   </properties>
-  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3641.vf58904a_b_b_5d8">
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3651.ve2e99a_4f4a_e5">
     <script>pipeline 
 {
     agent 
@@ -41,18 +41,19 @@
     }
     stages 
     {
-        stage(&apos;Clone&apos;) 
+        stage(&apos;Clone repository&apos;) 
         {
             steps 
             {
                 git branch: &apos;main&apos;, url: &apos;http://192.168.99.202:3000/vagrant/exam&apos;
             }
         }
-        stage(&apos;Build images&apos;)
+        stage(&apos;Build and run development&apos;)
         {
             steps
             {
-                sh &apos;docker compose -f docker-compose.yml up -d --build&apos;
+                sh &apos;docker compose -f docker-compose.yml down --rmi all&apos;
+                sh &apos;docker compose -f docker-compose.yml up -d&apos;
             }
         }
         stage(&apos;Test&apos;)
@@ -75,13 +76,6 @@
                 }
             }
         }
-        stage(&apos;CleanUp&apos;)
-        {
-            steps
-            {
-                sh &apos;docker compose -f docker-compose.yml down&apos;
-            }
-        }
         stage(&apos;Login&apos;)
         {
             steps 
@@ -89,21 +83,23 @@
                 sh &apos;echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin&apos;
             }
         }
-        stage(&apos;Image Build and Push&apos;) 
+        stage(&apos;Image push&apos;) 
         {
             steps 
             {
-                sh &apos;&apos;&apos;
-                    docker image rm -f $DOCKERHUB_CREDENTIALS_USR/client || true
-                    docker image rm -f $DOCKERHUB_CREDENTIALS_USR/storage || true
-                    docker image rm -f $DOCKERHUB_CREDENTIALS_USR/generator || true
-                    cd /home/vagrant/workspace/exam/client &amp;&amp; docker image build -t $DOCKERHUB_CREDENTIALS_USR/client .
-                    cd /home/vagrant/workspace/exam/storage &amp;&amp; docker image build -t $DOCKERHUB_CREDENTIALS_USR/storage .
-                    cd /home/vagrant/workspace/exam/generator &amp;&amp; docker image build -t $DOCKERHUB_CREDENTIALS_USR/generator .
-                    docker image push $DOCKERHUB_CREDENTIALS_USR/client
-                    docker image push $DOCKERHUB_CREDENTIALS_USR/storage
-                    docker image push $DOCKERHUB_CREDENTIALS_USR/generator
-                &apos;&apos;&apos;
+                sh &apos;docker image tag storage $DOCKERHUB_CREDENTIALS_USR/storage&apos;
+                sh &apos;docker image tag client $DOCKERHUB_CREDENTIALS_USR/client&apos;
+                sh &apos;docker image tag generator $DOCKERHUB_CREDENTIALS_USR/generator&apos;
+                sh &apos;docker image push $DOCKERHUB_CREDENTIALS_USR/storage&apos;
+                sh &apos;docker image push $DOCKERHUB_CREDENTIALS_USR/client&apos;
+                sh &apos;docker image push $DOCKERHUB_CREDENTIALS_USR/generator&apos;
+            }
+        }
+        stage(&apos;Clean up development&apos;)
+        {
+            steps
+            {
+                sh &apos;docker compose -f docker-compose.yml down&apos;
             }
         }
         stage(&apos;Deploy&apos;)
