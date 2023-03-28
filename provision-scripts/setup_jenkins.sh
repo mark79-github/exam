@@ -27,8 +27,12 @@ java -jar jenkins-plugin-manager-*.jar --war /usr/share/java/jenkins.war --plugi
 echo "* Restart Jenkins" 
 systemctl restart jenkins
 
-echo "* Download Jenkins CLI"
-wget http://192.168.99.201:8080/jnlpJars/jenkins-cli.jar
+if [ -f "jenkins-cli.jar" ]; then
+    echo "*** Jenkins CLI binary files found ..."
+else 
+    echo "* Download Jenkins CLI"
+    wget http://192.168.99.201:8080/jnlpJars/jenkins-cli.jar
+fi
 
 echo "* Create vagrant credentials"
 /vagrant/jenkins/add-jenkins-credentials.sh vagrant vagrant vagrant
